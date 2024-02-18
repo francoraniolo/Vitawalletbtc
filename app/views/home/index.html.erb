@@ -1,3 +1,17 @@
-<turbo-frame id="btc-rate">
-  <%= render partial: 'btc-rate', locals: {btc_rate: @btc_rate } %>
-</turbo-frame>
+<%= turbo_frame_tag 'btc_rate_tag' do %>
+  <div id="btc-rate">
+  <%= render partial: 'btc_rate', locals: { btc_rate: @btc_rate } %>
+  </div>
+<% end %>
+
+<%# If we want to get btc rate update periodically >
+<%# <script type="module">
+    setInterval(() => {
+      fetch('/', { headers: { 'Turbo-Frame': 'btc-rate' } })
+        .then(response => response.text())
+        .then(html => {
+          const frame = document.getElementById('btc-rate');
+          frame.innerHTML = html;
+        });
+    }, 10000); // 5000 milliseconds = 5 seconds
+  </script> %>
