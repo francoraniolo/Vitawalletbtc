@@ -1,6 +1,6 @@
 class PricesController < ApplicationController
   def btc
    data = Coindesk::Service.fetch
-   render json: data
+   render json: data, status: :ok
   end
 end

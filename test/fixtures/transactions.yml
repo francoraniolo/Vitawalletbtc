@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  sent_currency: MyString
+  received_currency: MyString
+  sent_amount: 9.99
+  type: 
+  unit_price: 9.99
+  received_amount: 9.99
+
+two:
+  user: two
+  sent_currency: MyString
+  received_currency: MyString
+  sent_amount: 9.99
+  type: 
+  unit_price: 9.99
+  received_amount: 9.99
