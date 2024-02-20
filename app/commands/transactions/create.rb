@@ -3,8 +3,10 @@ module Transactions
     prepend SimpleCommand
     include ActiveModel::Validations
 
-    validates :sent_currency, :received_currency, presence: true, inclusion: { in: %w(usd btc) }
-    validates :sent_amount, presence: true
+    class SentCurrencyNotFound < StandardError; end
+    class ReceivedCurrencyNotFound < StandardError; end
+    class SentAmountNotFound < StandardError; end
+    class InvalidCurrencies < StandardError; end
 
     attr_accessor :received_currency, :sent_currency, :sent_amount, :unit_price
     attr_reader :transaction, :user
@@ -17,16 +19,36 @@ module Transactions
     end
 
     def call
-      sent_amount_greater_than_zero?
-      sufficient_balance?
+      begin
+        raise SentCurrencyNotFound if sent_currency.nil?
+        raise ReceivedCurrencyNotFound if received_currency.nil?
+        raise SentAmountNotFound if sent_amount.nil?
+        raise InvalidCurrencies unless valid_currencies
 
-      return errors unless valid? && errors.empty?
+        different_currency?
+        sent_amount_greater_than_zero?
+        sufficient_balance?
+
+      rescue SentCurrencyNotFound
+        errors.add(:base, 'Sent currency not found')
+      rescue ReceivedCurrencyNotFound
+        errors.add(:base, 'Received currency not found')
+      rescue SentAmountNotFound
+        errors.add(:base, 'Sent amount not found')
+      rescue InvalidCurrencies
+        errors.add(:base, 'Invalid currencies')
+      end
+
+      return errors unless errors.empty?
 
       ActiveRecord::Base.transaction do
         create_transaction
         update_balances
         transaction
       end
+
+      rescue ActiveRecord::RecordInvalid => e
+        errors.add(:base, e.message)
     end
 
     private
@@ -50,12 +72,16 @@ module Transactions
                                                )
     end
 
+    def different_currency?
+      errors.add(:base, 'Currencies must be different') if sent_currency == received_currency
+    end
+
     def received_amount
       @received_amount ||= sent_amount / unit_price
     end
 
     def sent_amount_greater_than_zero?
-      errors.add(:sent_amount, 'must be greater than zero') unless sent_amount.to_f > 0
+      errors.add(:base, 'Sent amount must be greater than zero') unless sent_amount.to_f > 0
     end
 
     def sufficient_balance?
@@ -71,7 +97,6 @@ module Transactions
     end
 
     def update_balances
-      binding.break
       if operation_type == "buy"
         user.update!(usd_balance: user.usd_balance - sent_amount,
                      btc_balance: user.btc_balance + received_amount)
@@ -79,6 +104,10 @@ module Transactions
         user.update!(usd_balance: user.usd_balance + received_amount,
                      btc_balance: user.btc_balance - sent_amount)
       end
+    end
+
+    def valid_currencies
+      %w(btc usd).include?(sent_currency) &&  %w(btc usd).include?(received_currency)
     end
   end
 end
