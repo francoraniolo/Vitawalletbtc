@@ -10,4 +10,6 @@ Rails.application.routes.draw do
   root "home#index", as: 'home_index'
 
   get 'prices/btc', to: 'prices#btc'
+
+  resources :transactions, only: [:index, :create, :show]
 end
