@@ -5,8 +5,10 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    command =  Transactions::Create.call(transaction_params.merge(user: current_user))
-    binding.break
+    command =  Transactions::Create.call(sent_currency: sent_currency,
+      received_currency: received_currency,
+      sent_amount: sent_amount,
+      user: current_user)
 
     if command.success?
       render json: command.result, serializer: TransactionSerializer
@@ -22,7 +24,15 @@ class TransactionsController < ApplicationController
 
   private
 
-  def transaction_params
-    params.permit(:sent_currency, :received_currency, :sent_amount)
+  def sent_amount
+    @sent_amount = params[:sent_amount]
+  end
+
+  def sent_currency
+    @sent_currency = params[:sent_currency]
+  end
+
+  def received_currency
+    @received_currency = params[:received_currency]
   end
 end
