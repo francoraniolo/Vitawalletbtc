@@ -1,0 +1,160 @@
+openapi: '3.0.3'
+info:
+  title: 'Vita Wallet Challenge'
+  version: '1.0.0'
+
+paths:
+  /transactions:
+    get:
+      summary: 'Get transactions for the current user'
+      tags:
+        - 'Transactions'
+      description: 'Retrieve a list of transactions for the authenticated user.'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    post:
+      summary: 'Create a new transaction'
+      tags:
+        - 'Transactions'
+      description: 'Create a new transaction for the current user.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sent_currency:
+                  type: string
+                  example: 'usd'
+                received_currency:
+                  type: string
+                  example: 'btc'
+                sent_amount:
+                  type: number
+                  example: 100
+      responses:
+        200:
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        422:
+          description: 'Unprocessable Content'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                InsufficientBalance:
+                  value:
+                    error: 'Insufficient balance for the transaction'
+                SentCurrencyNotFound:
+                  value:
+                    error: 'Sent currency not found'
+                ReceivedCurrencyNotFound:
+                  value:
+                    error: 'Received currency not found'
+                SentAmountNotFound:
+                  value:
+                    error: 'Sent amount not found'
+                InvalidCurrencies:
+                  value:
+                    error: 'Invalid currencies'
+                CurrenciesMustBeDifferent:
+                  value:
+                    error: 'Currencies must be different'
+                SentAmountGreaterThanZero:
+                  value:
+                    error: 'Sent amount must be greater than zero'
+
+  /transactions/{id}:
+    get:
+      summary: 'Get a specific transaction'
+      tags:
+        - 'Transactions'
+      description: 'Retrieve details of a specific transaction for the authenticated user.'
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of the transaction to retrieve'
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        404:
+          description: 'Transaction not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Transaction not found"
+  /prices/btc:
+    get:
+      summary: 'Get current Bitcoin rate'
+      tags:
+        - 'BTC Rate'
+      description: 'Fetches the current Bitcoin rate.'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 51258.97
+
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        operation_type:
+          type: string
+          example: 'buy'
+        sent_currency:
+          type: string
+          example: 'usd'
+        received_currency:
+          type: string
+          example: 'btc'
+        sent_amount:
+          type: number
+          example: 100
+        received_amount:
+          type: number
+          example: 0.00196167
+        unit_price:
+          type: number
+          example: 50977.08
+        user:
+          type: string
+          example: 'test@gmail.com'
