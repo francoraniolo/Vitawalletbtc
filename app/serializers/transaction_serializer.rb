@@ -13,10 +13,10 @@ class TransactionSerializer < ActiveModel::Serializer
   end
 
   def sent_amount
-    object.sent_currency == 'usd' ? object.sent_amount.round(2) : object.sent_amount.round(8)
+    object.sent_currency == 'usd' ? format("%.2f", object.sent_amount) : format("%.8f", object.sent_amount)
   end
 
   def received_amount
-    object.received_currency == 'usd' ? object.received_amount.round(2) : object.received_amount.round(8)
+    object.received_currency == 'usd' ? format("%.2f", object.received_amount) : format("%.8f", object.received_amount)
   end
 end

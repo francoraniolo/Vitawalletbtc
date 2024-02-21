@@ -17,7 +17,8 @@ module Coindesk
     end
 
     def to_common
-      json_response = JSON.parse(@response.body)["bpi"][CURRENCY]["rate_float"].round(2)
+      json_response = JSON.parse(@response.body)["bpi"][CURRENCY]["rate_float"]
+      format("%.2f", json_response)
     end
   end
 end
