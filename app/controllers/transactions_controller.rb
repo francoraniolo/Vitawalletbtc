@@ -18,8 +18,13 @@ class TransactionsController < ApplicationController
   end
 
   def show
-    @transaction = current_user.transactions.find(params[:id])
-    render json: @transaction, serializer: TransactionSerializer
+    @transaction = current_user.transactions.find_by(id: params[:id])
+
+    if @transaction
+      render json: @transaction, serializer: TransactionSerializer
+    else
+      render json: { error: 'Transaction not found' }, status: :not_found
+    end
   end
 
   private
