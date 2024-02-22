@@ -29,15 +29,19 @@ class TransactionsController < ApplicationController
 
   private
 
+  def transaction_params
+    params.permit(:sent_currency, :received_currency, :sent_amount)
+  end
+
   def sent_amount
-    @sent_amount = params[:sent_amount]
+    @sent_amount = transaction_params[:sent_amount]
   end
 
   def sent_currency
-    @sent_currency = params[:sent_currency]
+    @sent_currency = transaction_params[:sent_currency]
   end
 
   def received_currency
-    @received_currency = params[:received_currency]
+    @received_currency = transaction_params[:received_currency]
   end
 end
