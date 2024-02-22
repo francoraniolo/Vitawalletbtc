@@ -3,10 +3,11 @@ module Transactions
     prepend SimpleCommand
     include ActiveModel::Validations
 
-    class SentCurrencyNotFound < StandardError; end
-    class ReceivedCurrencyNotFound < StandardError; end
-    class SentAmountNotFound < StandardError; end
-    class InvalidCurrencies < StandardError; end
+    validates_presence_of :sent_amount, message: "Sent amount not found"
+    validates_presence_of :sent_currency, message: "Sent currency not found"
+    validates_presence_of :received_currency, message: "Received currency not found"
+
+    validate :different_currency?, :sent_amount_greater_than_zero?, :valid_currencies?, :sufficient_balance?
 
     attr_accessor :received_currency, :sent_currency, :sent_amount, :unit_price
     attr_reader :transaction, :user
@@ -19,27 +20,7 @@ module Transactions
     end
 
     def call
-      begin
-        raise SentCurrencyNotFound if sent_currency.nil?
-        raise ReceivedCurrencyNotFound if received_currency.nil?
-        raise SentAmountNotFound if sent_amount.nil?
-        raise InvalidCurrencies unless valid_currencies
-
-        different_currency?
-        sent_amount_greater_than_zero?
-        sufficient_balance?
-
-      rescue SentCurrencyNotFound
-        errors.add(:base, 'Sent currency not found')
-      rescue ReceivedCurrencyNotFound
-        errors.add(:base, 'Received currency not found')
-      rescue SentAmountNotFound
-        errors.add(:base, 'Sent amount not found')
-      rescue InvalidCurrencies
-        errors.add(:base, 'Invalid currencies')
-      end
-
-      return errors unless errors.empty?
+      return errors unless valid?
 
       ActiveRecord::Base.transaction do
         create_transaction
@@ -106,8 +87,8 @@ module Transactions
       end
     end
 
-    def valid_currencies
-      %w(btc usd).include?(sent_currency) &&  %w(btc usd).include?(received_currency)
+    def valid_currencies?
+      errors.add(:base, 'Invalid currencies') unless %w(btc usd).include?(sent_currency) &&  %w(btc usd).include?(received_currency)
     end
   end
 end

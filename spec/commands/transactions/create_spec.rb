@@ -49,7 +49,7 @@ RSpec.describe Transactions::Create, type: :command do
 
           it "fails" do
             expect(command).to be_failure
-            expect(command.errors[:base]).to include('Sent currency not found')
+            expect(command.errors[:sent_currency]).to include("Sent currency not found")
           end
         end
         context 'with empty received currency' do
@@ -57,7 +57,7 @@ RSpec.describe Transactions::Create, type: :command do
 
           it "fails" do
             expect(command).to be_failure
-            expect(command.errors[:base]).to include('Received currency not found')
+            expect(command.errors[:received_currency]).to include("Received currency not found")
           end
         end
         context 'with empty sent amount' do
@@ -65,7 +65,7 @@ RSpec.describe Transactions::Create, type: :command do
 
           it "fails" do
             expect(command).to be_failure
-            expect(command.errors[:base]).to include('Sent amount not found')
+            expect(command.errors[:sent_amount]).to include("Sent amount not found")
           end
         end
       end
