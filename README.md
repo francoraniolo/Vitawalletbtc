@@ -6,15 +6,14 @@ Esta aplicación fue desarrollada como parte de un desafío, con el objetivo de 
 * Versión de Ruby: 3.1.3
 * Versión de Rails: 7.1.3
 * Base de datos: PostgreSQL
-* Características Destacadas
 
 ### API Coindesk Wrapper:
 
-Se implementó un envoltorio (wrapper) para la API de Coindesk, permitiendo obtener el valor actual del Bitcoin en USD.
+Se implementó un envoltorio (wrapper) para la API de Coindesk, permitiendo obtener el valor actual del Bitcoin en USD. Se utilizó la gema [`Faraday`](https://github.com/lostisland/faraday) 
 
 ### Manejo de Transacciones con SimpleCommand:
 
-Se utilizó la gema SimpleCommand para separar la lógica de creación de transacciones en un comando, manteniendo un diseño claro y modular.
+Se utilizó la gema [`SimpleCommand`](https://github.com/nebulab/simple_command) para separar la lógica de creación de transacciones en un comando, manteniendo un diseño claro y modular.
 
 ### Testing Integral con RSpec:
 
@@ -22,7 +21,7 @@ Se realizaron pruebas exhaustivas utilizando RSpec para modelos, solicitudes (re
 
 ### Documentación con Swagger:
 
-La documentación de la API se generó utilizando Swagger. Puedes explorar y probar la API directamente desde la interfaz Swagger.
+La documentación de la API se generó utilizando [`Swagger`](https://github.com/rswag/rswag). Puedes explorar y probar la API directamente desde la interfaz Swagger.
 
 ### Dockerización para Desarrollo:
 
