@@ -2,15 +2,15 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'validations' do
-    it { should validate_presence_of(:email) }
-    it { should validate_uniqueness_of(:email).case_insensitive }
-    it { should validate_presence_of(:usd_balance) }
-    it { should validate_numericality_of(:usd_balance).is_greater_than_or_equal_to(0) }
-    it { should validate_numericality_of(:btc_balance).is_greater_than_or_equal_to(0) }
+    it { is_expected.to validate_presence_of(:email) }
+    it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
+    it { is_expected.to validate_presence_of(:usd_balance) }
+    it { is_expected.to validate_numericality_of(:usd_balance).is_greater_than_or_equal_to(0) }
+    it { is_expected.to validate_numericality_of(:btc_balance).is_greater_than_or_equal_to(0) }
   end
 
   describe 'associations' do
-    it { should have_many(:transactions) }
+    it { is_expected.to have_many(:transactions) }
   end
 
   describe 'defaults' do
