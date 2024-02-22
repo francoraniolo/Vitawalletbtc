@@ -28,4 +28,42 @@ La documentación de la API se generó utilizando Swagger. Puedes explorar y pro
 
 La aplicación se dockerizó para facilitar el desarrollo, proporcionando un entorno consistente y portátil.
 
- 
+## Rutas de la API
+
+### Transacciones
+
+- **Obtener Transacciones:**
+  - **Endpoint:** `/transactions`
+  - **Método:** GET
+  - **Descripción:** Recuperar una lista de transacciones para el usuario autenticado.
+  - **Respuesta:** Array de transacciones.
+
+- **Crear Transacción:**
+  - **Endpoint:** `/transactions`
+  - **Método:** POST
+  - **Descripción:** Crear una nueva transacción para el usuario actual.
+  - **Cuerpo de la Solicitud:**
+    ```json
+    {
+      "sent_currency": "usd",
+      "received_currency": "btc",
+      "sent_amount": 100.0
+    }
+    ```
+  - **Respuesta:** Detalles de la nueva transacción.
+
+- **Obtener Transacción Específica:**
+  - **Endpoint:** `/transactions/{id}`
+  - **Método:** GET
+  - **Descripción:** Recuperar detalles de una transacción específica para el usuario autenticado.
+  - **Parámetros:**
+    - `id` (Parámetro de Ruta): ID de la transacción a recuperar.
+  - **Respuesta:** Detalles de la transacción específica.
+
+### Precio del Bitcoin
+
+- **Obtener Tasa de Bitcoin:**
+  - **Endpoint:** `/prices/btc`
+  - **Método:** GET
+  - **Descripción:** Obtener la tasa actual de Bitcoin.
+  - **Respuesta:** Detalles de la tasa actual de Bitcoin.
