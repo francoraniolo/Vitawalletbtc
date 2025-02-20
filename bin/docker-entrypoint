@@ -1,9 +1,18 @@
 #!/bin/bash -e
 
 # If running the rails server then create or migrate existing database
-if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server -b 0.0.0.0" ]; then
-  ./bin/rails db:create
+if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
+  # Wait for the database to be ready
+  echo "Waiting for the database to be ready..."
+  until ./bin/rails db:version; do
+    echo "Database is unavailable - sleeping"
+    sleep 1
+  done
+
+  # Create or migrate the database
+  echo "Running database setup..."
   ./bin/rails db:prepare
 fi
 
+# Execute the command passed to the container
 exec "${@}"
