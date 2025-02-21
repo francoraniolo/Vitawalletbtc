@@ -7,9 +7,9 @@ Esta aplicación fue desarrollada como parte de un desafío, con el objetivo de 
 * Versión de Rails: 7.1.3
 * Base de datos: PostgreSQL
 
-### API Coindesk Wrapper:
+### API ~~Coindesk~~ Coingecko Wrapper:
 
-Se implementó un envoltorio (wrapper) para la API de Coindesk, permitiendo obtener el valor actual del Bitcoin en USD. Se utilizó la gema [`Faraday`](https://github.com/lostisland/faraday) 
+Se implementó un envoltorio (wrapper) para la API de  ~~Coindesk~~ Coingecko, permitiendo obtener el valor actual del Bitcoin en USD. Se utilizó la gema [`Faraday`](https://github.com/lostisland/faraday) 
 
 ### Manejo de Transacciones con SimpleCommand:
 
